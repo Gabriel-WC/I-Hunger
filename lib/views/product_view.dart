@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/cart.dart';
+import '../services/user_service.dart';
 
 class ProductView extends StatelessWidget {
   const ProductView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalhes do Produto'),
@@ -15,8 +19,14 @@ class ProductView extends StatelessWidget {
         children: [
           Container(
             height: 300,
-            color: Colors.grey[300],
-            child: const Icon(Icons.fastfood, size: 100),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
+            ),
+            child: const Icon(Icons.fastfood, size: 100, color: Colors.white),
           ),
           Padding(
             padding: const EdgeInsets.all(16),
@@ -31,11 +41,11 @@ class ProductView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'R\$32,90',
                   style: TextStyle(
                     fontSize: 20,
-                    color: Colors.orange,
+                    color: Colors.orange[700],
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -48,7 +58,10 @@ class ProductView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text('Molho de tomate, mussarela, manjericão fresco'),
+                const Text(
+                  'Molho de tomate, mussarela, manjericão fresco',
+                  style: TextStyle(fontSize: 16),
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   'Observações',
@@ -74,18 +87,24 @@ class ProductView extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: ElevatedButton(
           onPressed: () {
-            Cart().addItem('Pizza Margherita', 32.90); // Correto - usa o singleton
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Produto adicionado ao carrinho!'),
-                duration: Duration(seconds: 2),
-              ),
-            );
+            if (userService.isLoggedIn) {
+              Cart.instance.addItem('Pizza Margherita', 32.90);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Produto adicionado ao carrinho!'),
+                  duration: Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Faça login para adicionar itens ao carrinho'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
-            minimumSize: const Size(double.infinity, 50),
-          ),
           child: const Text(
             'Adicionar ao Carrinho - R\$32,90',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

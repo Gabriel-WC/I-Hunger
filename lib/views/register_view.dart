@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../services/user_service.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
 
   @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cadastro'),
@@ -16,6 +32,7 @@ class RegisterView extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               TextFormField(
+                controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Nome completo',
                   prefixIcon: Icon(Icons.person),
@@ -24,6 +41,7 @@ class RegisterView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: _emailController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   prefixIcon: Icon(Icons.email),
@@ -32,6 +50,7 @@ class RegisterView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: _phoneController,
                 decoration: const InputDecoration(
                   labelText: 'Telefone',
                   prefixIcon: Icon(Icons.phone),
@@ -40,6 +59,16 @@ class RegisterView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: _addressController,
+                decoration: const InputDecoration(
+                  labelText: 'Endereço',
+                  prefixIcon: Icon(Icons.location_on),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Senha',
@@ -49,6 +78,7 @@ class RegisterView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: _confirmPasswordController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Confirmar senha',
@@ -62,11 +92,21 @@ class RegisterView extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
+                    // Simula cadastro bem-sucedido
+                    userService.login(User(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      phone: _phoneController.text,
+                      address: _addressController.text,
+                    ));
                     Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Cadastro realizado com sucesso!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                  ),
                   child: const Text(
                     'Cadastrar',
                     style: TextStyle(fontSize: 16),

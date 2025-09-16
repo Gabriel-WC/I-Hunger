@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../services/user_service.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
   @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -34,6 +46,7 @@ class LoginView extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             TextFormField(
+              controller: _emailController,
               decoration: const InputDecoration(
                 labelText: 'Email',
                 prefixIcon: Icon(Icons.email),
@@ -42,6 +55,7 @@ class LoginView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              controller: _passwordController,
               obscureText: true,
               decoration: const InputDecoration(
                 labelText: 'Senha',
@@ -63,11 +77,15 @@ class LoginView extends StatelessWidget {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
+                  // Simula login bem-sucedido
+                  userService.login(User(
+                    name: 'João Silva',
+                    email: _emailController.text,
+                    phone: '(11) 99999-9999',
+                    address: 'Rua das Flores, 123',
+                  ));
                   Navigator.pushReplacementNamed(context, '/home');
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                ),
                 child: const Text(
                   'Entrar',
                   style: TextStyle(fontSize: 16),
