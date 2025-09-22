@@ -82,7 +82,7 @@ class ProductView extends StatelessWidget {
                     ),
                     maxLines: 3,
                   ),
-                  const SizedBox(height: 100), // Espaço extra para o botão flutuante
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
