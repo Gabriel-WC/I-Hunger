@@ -18,7 +18,7 @@ class SplashView extends StatelessWidget {
             const Icon(Icons.restaurant, size: 80, color: Colors.white),
             const SizedBox(height: 20),
             const Text(
-              'QuickOrder',
+              'I-Hunger',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
